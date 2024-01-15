@@ -1,0 +1,11 @@
+{
+  "Nickname": "OBodyMerger",
+  "Visibility": "Visible",
+  "OneLineDescription": "OBody preset merger",
+  "LongDescription": "Merges multiple OBody NG preset configurations into one.",
+  "PreferredAutoVersioning": "Default",
+  "RequiredMods": [],
+  "TargetedReleases": [
+    "SkyrimSE"
+  ]
+}

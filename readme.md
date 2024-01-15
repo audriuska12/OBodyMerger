@@ -47,3 +47,9 @@ Preset distribution sample (don't *actually* distribute the same preset to males
 	}
 }
 ```
+
+**Compatibility**
+Should remain compatible with OBody NG until they change their file structure. If they do and I'm not around to fix it, see next section...
+
+**Permissions**
+The code's open. Use and modify as you see fit, but I'd appreciate the credit if you do base other work on it.

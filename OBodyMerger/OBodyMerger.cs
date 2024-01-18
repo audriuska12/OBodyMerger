@@ -29,6 +29,19 @@ namespace OBodyMerger
             {
                 Directory.CreateDirectory(SKSEPluginDir);
             }
+            string configPath = Path.Combine(SKSEPluginDir, "OBody_presetDistributionConfig.json");
+            if (File.Exists(configPath))
+            {
+                Console.WriteLine("Backing up existing config...");
+                string backupPath = Path.Combine(SKSEPluginDir, "OBody_presetDistributionConfig_backup.json");
+                string currentConfig = File.ReadAllText(configPath);
+                File.WriteAllText(backupPath, currentConfig);
+                if (settings.Value.PreserveExistingConfig)
+                {
+                    OutputTemplate outputCurrent = OutputTemplate.FromFile(currentConfig);
+                    output.AddAll(outputCurrent);
+                }
+            }
             string presetSourceDir = Path.Combine(state.DataFolderPath, "CalienteTools", "BodySlide", "SliderPresets");
             string presetDestinationDir = Path.Combine(SKSEPluginDir, "OBodyPresets");
             if (!Directory.Exists(presetDestinationDir))
@@ -73,7 +86,7 @@ namespace OBodyMerger
                 output.AddAll(outputCurrent);
             }
             output.ShowBlacklistedInMenu = settings.Value.ShowBlacklistedPresetsInRefitMenu;
-            File.WriteAllText(Path.Combine(SKSEPluginDir, "OBody_presetDistributionConfig.json"), JsonConvert.SerializeObject(output, Newtonsoft.Json.Formatting.Indented));
+            File.WriteAllText(configPath, JsonConvert.SerializeObject(output, Newtonsoft.Json.Formatting.Indented));
         }
     }
 }

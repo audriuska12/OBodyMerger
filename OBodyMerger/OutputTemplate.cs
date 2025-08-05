@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Skyrim;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Noggog;
@@ -243,18 +244,18 @@ namespace OBodyMerger
             }
         }
 
-        public void AddAll(PresetTemplate preset)
+        public void AddAll(PresetTemplate preset, Settings settings)
         {
             foreach ((string presetName, PresetData data) in preset.Data)
             {
-                AddToThreeLevelList(NpcFormID, data.NPCFormIDs, presetName);
-                AddToTwoLevelList(Npcs, data.NPCs, presetName);
-                AddToTwoLevelList(FactionFemale, data.FemaleFactions, presetName);
-                AddToTwoLevelList(FactionMale, data.MaleFactions, presetName);
-                AddToTwoLevelList(PluginFemale, data.FemalePlugins, presetName);
-                AddToTwoLevelList(PluginMale, data.MalePlugins, presetName);
-                AddToTwoLevelList(RaceFemale, data.FemaleRaces, presetName);
-                AddToTwoLevelList(RaceMale, data.MaleRaces, presetName);
+                AddToThreeLevelList(NpcFormID, data.NPCFormIDs, presetName, settings);
+                AddToTwoLevelList(Npcs, data.NPCs, presetName, settings);
+                AddToTwoLevelList(FactionFemale, data.FemaleFactions, presetName, settings);
+                AddToTwoLevelList(FactionMale, data.MaleFactions, presetName, settings);
+                AddToTwoLevelList(PluginFemale, data.FemalePlugins, presetName, settings);
+                AddToTwoLevelList(PluginMale, data.MalePlugins, presetName, settings);
+                AddToTwoLevelList(RaceFemale, data.FemaleRaces, presetName, settings);
+                AddToTwoLevelList(RaceMale, data.MaleRaces, presetName, settings);
                 if (data.BlacklistFromRandomDistribution)
                 {
                     BlacklistRandom.Add(presetName);
@@ -262,7 +263,7 @@ namespace OBodyMerger
             }
         }
 
-        private static void AddToThreeLevelList(Dictionary<string, Dictionary<string, HashSet<string>>> target, Dictionary<string, HashSet<string>> source, string value)
+        private static void AddToThreeLevelList(Dictionary<string, Dictionary<string, HashSet<string>>> target, Dictionary<string, HashSet<string>> source, string value, Settings settings)
         {
             foreach ((string l1key, HashSet<string> l1value) in source)
             {
@@ -272,25 +273,37 @@ namespace OBodyMerger
                 }
                 foreach (string l2key in l1value)
                 {
-                    if (!target[l1key].ContainsKey(l2key))
+                    foreach (string val in GetAliases(settings, l2key))
                     {
-                        target[l1key][l2key] = new();
+                        if (!target[l1key].ContainsKey(val))
+                        {
+                            target[l1key][val] = new();
+                        }
+                        target[l1key][val].Add(value);
                     }
-                    target[l1key][l2key].Add(value);
                 }
             }
         }
 
-        private static void AddToTwoLevelList(Dictionary<string, HashSet<string>> target, HashSet<string> source, string value)
+        private static void AddToTwoLevelList(Dictionary<string, HashSet<string>> target, HashSet<string> source, string value, Settings settings)
         {
             foreach (string key in source)
             {
-                if (!target.ContainsKey(key))
+                foreach (string val in GetAliases(settings, key))
                 {
-                    target[key] = new();
+                    if (!target.ContainsKey(val))
+                    {
+                        target[val] = new();
+                    }
+                    target[val].Add(value);
                 }
-                target[key].Add(value);
             }
         }
+
+        private static List<string> GetAliases(Settings settings, string value)
+        {
+            return settings.Aliases.TryGetValue(value, out List<string>? vals) ? (vals ?? []) : [value];
+        }
     }
+
 }

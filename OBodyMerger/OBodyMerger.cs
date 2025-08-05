@@ -72,7 +72,7 @@ namespace OBodyMerger
                 Console.WriteLine($"Processing preset file {Path.GetFileName(presetFile)}");
                 PresetTemplate? preset = JsonConvert.DeserializeObject<PresetTemplate>(File.ReadAllText(presetFile));
                 if (preset == null) continue;
-                output.AddAll(preset);
+                output.AddAll(preset, settings.Value);
             }
             string templateDir = Path.Combine(SKSEPluginDir, "OBodyTemplate");
             if (!Directory.Exists(templateDir))

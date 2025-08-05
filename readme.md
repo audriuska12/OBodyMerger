@@ -6,6 +6,7 @@ Features:
 * Merge multiple OBody presets into a single file. Useful for, say, keeping your personal changes safe from accidental overwrites between versions, or merging mods like [ORefit Master List](https://www.nexusmods.com/skyrimspecialedition/mods/105052) into your setup without having to do nearly as much manual work. The preset JSONs must be in Data/SKSE/Plugins/OBodyTemplate, following the same formatting rules as the actual config file.
 * Create per-preset distribution rules. Files must be located in SKSE/Plugins/OBodyPresets. Sample at the bottom of the readme.
 * Create templates for per-preset distribution rules. This will scan your BodySlide presets folder and generate a .json in the OBodyPresets folder for each file and preset. Existing files will *not* be overwritten.
+* Define aliases in settings to avoid having to list multiple races in the templates, e.g.: add alias "Slim" to the settings, list "BretonRace", "BretonRaceVampire", "DarkElfRace", "DarkElfRaceVampire", "HighElfRace", "HighElfRaceVampire", "WoodElfRace", "WoodElfRaceVampire" in it to assign to them all, and any assigment templates containing "Slim" will be assigned to all these races. Works in any field.
 
 Preset distribution sample (don't *actually* distribute the same preset to males and females):
 ```
